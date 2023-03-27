@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js" integrity="sha512-2bMhOkE/ACz21dJT8zBOMgMecNxx0d37NND803ExktKiKdSzdwn+L7i9fdccw/3V06gM/DBWKbYmQvKMdAA9Nw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="static/js/nologin.js"></script>
+    </head>
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+              <a class="navbar-item" href="/logout">
+                <img src="static/images/logo-no-background.png" width="112" height="28">
+              </a>
+          
+              <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </a>
+            </div>
+          
+            <div class="navbar-menu">
+              <div class="navbar-start">
+                <a class="navbar-item" href="/staff">
+                  Home
+                </a>
+              
+              {% if loggedin %}
+              <a class="navbar-item" href="/managekeys">
+                Manage Keys
+              </a>
+              <a class="navbar-item" href="/manageorders">
+                Manage Orders
+              </a>
+
+              <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                  {{name}} {{surname}}
+                </a>
+                <div class="navbar-dropdown">
+                  <a class="navbar-item" href="/log">
+                    Audit Log
+                  </a>
+                  <a class="navbar-item" id="signup">
+                    Add User
+                  </a>
+                  <hr class="navbar-divider">
+                  <a class="navbar-item" href="/logout">
+                    Sign Out
+                  </a>
+                </div>
+              </div>
+            </div>
+              {% else %}
+            </div>
+              <div class="navbar-end">
+                <div class="navbar-item">
+                  <div class="buttons">
+                    <a class="button is-light" id="login">
+                      Log in
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+        </nav>
+        <h1 class="title has-text-centered">Revoke Licenses</h1>
+        <input class="input is-centered" id="query" style="width: 60%;" type="text" placeholder="Search by Email...">
+        <a class="button is-primary" id="search">
+            Search
+        </a>
+        <div class="columns is-multiline is-centered">
+            <div class="column is-2 has-text-centered">
+                <strong>Key</strong>
+            </div>
+            <div class="column is-2 has-text-centered">
+                <strong>Expiry Date</strong>
+            </div>
+            <div class="column is-2 has-text-centered">
+                <strong>Package Name</strong>
+            </div>
+            <div class="column is-2 has-text-centered">
+                <strong>Owner Email</strong>
+            </div>
+            <div class="column is-1 has-text-centered">
+                <strong>Owner First Name</strong>
+            </div>
+            <div class="column is-1 has-text-centered">
+                <strong>Owner Last Name</strong>
+            </div>
+            <div class="column is-2 has-text-centered">
+
+            </div>
+            {% for item in keys %}
+            <div class="column is-2 has-text-centered">
+                {{item.lkey}}
+            </div>
+            <div class="column is-2 has-text-centered">
+                {{item.expiry}}
+            </div>
+            <div class="column is-2 has-text-centered">
+                {{item.name}}
+            </div>
+            <div class="column is-2 has-text-centered">
+                {{item.email}}
+            </div>
+            <div class="column is-1 has-text-centered">
+                {{item.firstname}}
+            </div>
+            <div class="column is-1 has-text-centered">
+                {{item.lastname}}
+            </div>
+            <div class="column is-2 has-text-centered">
+                <a href="/removekey?key={{item.lkey}}" class="button is-danger has-icons-left">
+                    <span class="icon is-small">
+                        <i class="fa-solid fa-x"></i>
+                    </span>
+                        .  Remove Key
+                </a>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="modal" id="signupform">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <br><br>
+                <div class="card">
+                    <div class="card-header">
+                    <p class="card-header-title has-text-centered">Create an Account</p>
+                    </div>
+                    <div class="card-content">
+                    <form action="/addstaff" method="post">
+                        
+            
+                        <div class="field">
+                        <label class="label">First Name</label>
+                        <p class="control">
+                            <input class="input" name="firstname" type="text" required placeholder="John">
+                        </p>
+                        </div>
+            
+                        <div class="field">
+                        <label class="label">Last Name</label>
+                        <p class="control">
+                            <input class="input" name="lastname" type="text" required placeholder="Doe">
+                        </p>
+                        </div>
+            
+                        <div class="content">
+                        <div class="field">
+                            <label class="label">Email</label>
+                            <div class="control has-icons-left has-icons-right">
+                            <input class="input" name="email" type="email" required placeholder="Email">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <span class="icon is-small is-right">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </span>
+                            </div>
+                        </div>
+                        </div>
+            
+                        <div class="field">
+                        <label class="label">Password</label>
+                        <p class="control has-icons-left">
+                            <input class="input" name="password" type="password" required placeholder="Password">
+                            <span class="icon is-small is-left">
+                            <i class="fa-solid fa-lock"></i>
+                            </span>
+                        </p>
+                        </div>
+                        
+            
+                        <div class="field">
+                        <p class="control">
+                            <button class="button is-success" type="submit">
+                            Sign Up
+                            </button>
+                        </p>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                
+            </div>
+            <button class="modal-close is-large" aria-label="close" id="closesignup"></button>
+        </div>
+        <script src="static/js/keysearch.js"></script>
+
+    </body>
+</html>

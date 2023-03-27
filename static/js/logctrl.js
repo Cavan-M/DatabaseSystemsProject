@@ -1,0 +1,9 @@
+$("#refunds").hide();
+$("#refundbutton").click(()=>{
+    $("#refunds").show();
+    $("#revocations").hide();
+});
+$("#revokebutton").click(()=>{
+    $("#revocations").show();
+    $("#refunds").hide();
+});
