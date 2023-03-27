@@ -1,6 +1,6 @@
 # DatabaseSystemsProject
 Requirements:
-Python Version 3.9
+- Python Version 3.9
   - PyMySQL
   - Flask
   - Flask-Login
